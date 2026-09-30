@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vida Nueva | Creando Oportunidades</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lector Markdown para el Blog -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <!-- Fuentes -->
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root { --azul-corp: #0450B2; }
+        body { font-family: 'Inter', sans-serif; color: #333333; scroll-behavior: smooth; background-color: #fcfcfc;}
+        h1, h2, h3, h4, h5, .font-elegant { font-family: 'Cormorant Garamond', serif; letter-spacing: -0.02em; }
+        .font-sans { font-family: 'Inter', sans-serif; }
+        .text-azul-corp { color: var(--azul-corp); }
+        .bg-azul-corp { background-color: var(--azul-corp); }
+        .card-hover { transition: transform 0.4s ease, box-shadow 0.4s ease; border: 1px solid #eaeaea; }
+        .card-hover:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(0,0,0,0.06); }
+        .respaldo-logo { filter: grayscale(100%) opacity(70%); transition: all 0.4s ease; }
+        .card-hover:hover .respaldo-logo { filter: grayscale(0%) opacity(100%); }
+        
+        .switch-container { background: #f3f4f6; border-radius: 9999px; padding: 4px; display: inline-grid; grid-template-columns: 1fr 1fr; position: relative; }
+        .switch-btn { z-index: 10; position: relative; padding: 8px 24px; border-radius: 9999px; font-weight: 500; font-size: 0.875rem; transition: color 0.3s ease; cursor: pointer; white-space: nowrap; text-align: center; }
+        .switch-btn.active { color: #ffffff; }
+        .switch-btn.inactive { color: #6b7280; }
+        .switch-btn.inactive:hover { color: #111827; }
+        .switch-bg { position: absolute; top: 4px; bottom: 4px; left: 4px; width: calc((100% - 8px) / 2); background: var(--azul-corp); border-radius: 9999px; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); z-index: 1; box-shadow: 0 2px 4px rgba(0,0,0,0.1);}
+        
+        /* ACORDEÓN DISCRETO */
+        .timeline-expand-grid {
+            display: grid;
+            grid-template-rows: 0fr;
+            transition: grid-template-rows 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        .timeline-expand-grid.is-open {
+            grid-template-rows: 1fr;
+        }
+        .timeline-expand-inner {
+            overflow: hidden;
+        }
+        
+        .timeline-content-fade {
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            transition-delay: 0.1s;
+        }
+        .is-open .timeline-content-fade {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+
+        /* LÍNEA DE TIEMPO: línea tenue + puntos sólidos con aro blanco */
+        .timeline-line { background-color: #c7d9f2; }
+        .timeline-dot {
+            background-color: var(--azul-corp);
+            border: 3px solid #ffffff;
+            box-shadow: 0 0 0 1.5px var(--azul-corp);
+        }
+
+        .bg-cover-center { background-size: cover; background-position: center; background-repeat: no-repeat; }
+        .prose p { margin-bottom: 1.5em; line-height: 1.8; font-size: 1.125rem; color: #4a4a4a; font-weight: 300; }
+        .prose h2 { font-family: 'Cormorant Garamond', serif; font-size: 2.5rem; font-weight: 500; color: #111827; margin-top: 2em; margin-bottom: 0.8em; line-height: 1.2; }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <nav class="bg-white/95 backdrop-blur-md fixed w-full z-50 top-0 border-b border-gray-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <div class="flex items-center cursor-pointer w-1/4" onclick="cambiarVista('origen')">
+                    <img src="vidanueva.png" alt="Vida Nueva Logo" class="h-14 w-auto">
+                </div>
+                <div class="hidden md:flex justify-center w-2/4">
+                    <div class="switch-container font-sans">
+                        <div id="switch-bg" class="switch-bg transform translate-x-0"></div>
+                        <button id="btn-origen" onclick="cambiarVista('origen')" class="switch-btn active"><span id="txt-switch_origen">Apostolado Local</span></button>
+                        <button id="btn-onu" onclick="cambiarVista('onu')" class="switch-btn inactive"><span id="txt-switch_onu">Delegación ONU</span></button>
+                    </div>
+                </div>
+                <div class="flex justify-end w-1/4 font-sans font-light text-sm tracking-wide">
+                    <a href="https://wa.me/qr/AEFWMAMPKYDXI1?s=r" target="_blank" rel="noopener noreferrer" class="bg-azul-corp text-white px-6 py-2.5 rounded-full hover:bg-blue-800 transition font-medium shadow-sm"><span id="txt-nav_btn_donar">Apoyar Proyecto</span></a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- VISTA A: EL ORIGEN -->
+    <div id="vista-origen" class="flex-grow pt-20">
+        
+        <!-- HERO SECTION -->
+        <section class="pt-24 pb-20 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid md:grid-cols-2 gap-16 items-start">
+                    
+                    <!-- COLUMNA IZQUIERDA -->
+                    <div>
+                        <span id="txt-hero_origen_tag" class="text-azul-corp font-sans font-semibold tracking-[0.2em] uppercase text-xs mb-4 block">Nuestra Historia</span>
+                        <h1 id="txt-hero_origen_titulo" class="text-5xl md:text-6xl font-elegant text-gray-900 mb-8 leading-tight">
+                            Defendiendo la <span class="text-azul-corp italic">dignidad humana</span> desde la calle.
+                        </h1>
+                        <p id="txt-historia_origen" class="text-lg text-gray-600 leading-relaxed font-sans font-light mb-8">Cargando...</p>
+                        
+                        <div class="mb-10">
+                            <a href="https://wa.me/qr/BELYKFOJL24KO1" target="_blank" rel="noopener noreferrer" class="bg-azul-corp text-white px-8 py-3.5 rounded-full font-sans font-medium hover:bg-blue-800 transition shadow-md inline-block">
+                                <span id="txt-btn_voluntario">Súmate como voluntario &rarr;</span>
+                            </a>
+                        </div>
+                        
+                        <!-- BOTÓN LIMPIO CON LÍNEA VERTICAL -->
+                        <div class="relative w-full ml-1">
+                            
+                            <!-- Botón Estilo Texto Minimalista -->
+                            <button onclick="toggleTimeline()" id="btn-toggle-timeline" class="relative z-20 flex items-center gap-3 group cursor-pointer">
+                                <span id="txt-btn_linea_tiempo" class="font-sans font-medium text-gray-800 group-hover:text-azul-corp transition-colors duration-300 text-[15px]">La historia</span>
+                                <svg class="w-4 h-4 text-gray-400 group-hover:text-azul-corp transition-transform duration-500" id="icon-timeline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </button>
+
+                            <!-- CONTENEDOR DESPLEGABLE -->
+                            <div id="timeline-wrapper" class="timeline-expand-grid relative z-10 w-full mt-2 ml-2">
+                                <div class="timeline-expand-inner relative">
+                                    <!-- LÍNEA AZUL VERTICAL CONTINUA -->
+                                    <div class="timeline-line absolute left-[10px] top-0 bottom-4 w-[2px] rounded-full"></div>
+                                    
+                                    <!-- Contenido libre -->
+                                    <div class="timeline-content-fade pl-9 pt-4 pb-2 space-y-8" id="timeline-content">
+                                        <p class="text-gray-400 font-sans font-light text-sm">Cargando...</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- COLUMNA DERECHA (Imagen estática) -->
+                    <div class="rounded-2xl overflow-hidden shadow-2xl h-96 md:h-[600px] sticky top-28">
+                        <img id="img-historia" src="https://via.placeholder.com/800x600?text=Cargando+Foto" alt="Historia" class="w-full h-full object-cover">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Métricas -->
+        <section class="py-16 bg-gray-50 border-y border-gray-100">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center divide-y md:divide-y-0 md:divide-x divide-gray-200">
+                    <div class="py-4">
+                        <span id="txt-metrica_ediciones" class="text-5xl font-elegant text-azul-corp block mb-2">-</span>
+                        <span id="txt-metrica_1_titulo" class="text-sm font-sans font-medium text-gray-500 uppercase tracking-widest">Ediciones Mensuales</span>
+                    </div>
+                    <div class="py-4">
+                        <span id="txt-metrica_voluntarios" class="text-5xl font-elegant text-azul-corp block mb-2">-</span>
+                        <span id="txt-metrica_2_titulo" class="text-sm font-sans font-medium text-gray-500 uppercase tracking-widest">Voluntarios</span>
+                    </div>
+                    <div class="py-4">
+                        <span id="txt-metrica_familias" class="text-5xl font-elegant text-azul-corp block mb-2">-</span>
+                        <span id="txt-metrica_3_titulo" class="text-sm font-sans font-medium text-gray-500 uppercase tracking-widest">Familias Impactadas</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonios -->
+        <section class="py-24 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h2 id="txt-testimonio_titulo" class="text-4xl md:text-5xl font-elegant text-gray-900 mb-4">Rostros Reales</h2>
+                    <p id="txt-testimonio_sub" class="text-gray-500 font-light max-w-2xl mx-auto font-sans">El verdadero impacto se mide en historias de esperanza.</p>
+                </div>
+                <div id="testimonios-grid" class="grid md:grid-cols-2 gap-8"></div>
+            </div>
+        </section>
+
+        <!-- Blog -->
+        <section class="py-24 bg-gray-50 border-t border-gray-100">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="mb-12 border-b border-gray-200 pb-6">
+                    <span id="txt-blog_tag" class="text-azul-corp font-sans font-semibold tracking-[0.2em] uppercase text-xs mb-2 block">El día a día</span>
+                    <h2 id="txt-blog_titulo" class="text-4xl md:text-5xl font-elegant text-gray-900">Bitácora de Impacto</h2>
+                </div>
+                <div id="blog-grid" class="grid md:grid-cols-3 gap-10"></div>
+            </div>
+        </section>
+
+        <!-- Conector ONU -->
+        <section class="relative py-32 bg-gray-900 overflow-hidden">
+            <img id="img-conector" src="" alt="Fondo" class="absolute inset-0 w-full h-full object-cover opacity-30">
+            <div class="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/60 to-transparent"></div>
+            <div class="relative max-w-4xl mx-auto px-4 text-center z-10">
+                <h2 id="txt-conector_titulo" class="text-4xl md:text-5xl font-elegant text-white mb-6 leading-tight">De las calles de Guadalajara,<br>al estrado internacional.</h2>
+                <p id="txt-conector_texto" class="text-lg text-gray-300 font-light font-sans mb-10 max-w-2xl mx-auto">Llevar este diálogo a los foros donde se toman las decisiones globales.</p>
+                <button onclick="cambiarVista('onu')" class="bg-white text-gray-900 px-8 py-4 rounded-full font-sans font-semibold hover:bg-gray-100 transition shadow-xl transform hover:-translate-y-1">
+                    <span id="txt-conector_btn">Conoce Vida Nueva Impact &rarr;</span>
+                </button>
+            </div>
+        </section>
+    </div>
+
+    <!-- VISTA B: DELEGACIÓN ONU -->
+    <div id="vista-onu" class="hidden flex-grow pt-20 bg-white">
+        <section id="bg-hero-onu" class="relative py-40 bg-cover-center" style="background-image: url('https://via.placeholder.com/1200x800');">
+            <div class="absolute inset-0 bg-azul-corp/90 backdrop-blur-sm"></div>
+            <div class="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-10">
+                <img src="logo.svg" alt="VN Impact" class="h-16 mx-auto mb-8 brightness-0 invert" onerror="this.style.display='none'">
+                <span id="txt-onu_hero_tag" class="text-blue-200 font-sans font-semibold tracking-[0.2em] uppercase text-xs mb-6 block">Comisión de la CSW71</span>
+                <h1 id="txt-eslogan_onu" class="text-4xl md:text-6xl font-elegant text-white mb-8 leading-tight">Cargando eslogan...</h1>
+                <p id="txt-justificacion_onu" class="text-xl text-blue-100 leading-relaxed font-sans font-light max-w-3xl mx-auto mb-10">Cargando justificación...</p>
+                <a href="https://wa.me/qr/AEFWMAMPKYDXI1?s=r" target="_blank" rel="noopener noreferrer" class="inline-block bg-white text-azul-corp px-8 py-3.5 rounded-full font-sans font-medium hover:shadow-lg transition duration-300"><span id="txt-onu_btn_patrocinar">Patrocinar la Delegación</span></a>
+            </div>
+        </section>
+
+        <section class="py-24 bg-gray-50 border-y border-gray-100">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <h2 id="txt-equipo_titulo" class="text-4xl md:text-5xl font-elegant text-gray-900 mb-4">Nuestro Equipo</h2>
+                <p id="txt-equipo_sub" class="text-gray-500 font-light max-w-2xl mx-auto font-sans mb-16">Jóvenes preparados para representar a México.</p>
+                <div id="equipo-grid" class="grid grid-cols-2 md:grid-cols-4 gap-8"></div>
+            </div>
+        </section>
+
+        <section class="py-24 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h2 id="txt-alianzas_titulo" class="text-4xl md:text-5xl font-elegant text-gray-900 mb-4">Respaldos Institucionales</h2>
+                    <p id="txt-alianzas_sub" class="text-gray-500 font-light max-w-2xl mx-auto font-sans">Organizaciones que confían en nosotros.</p>
+                </div>
+                <div id="alianzas-grid" class="grid grid-cols-2 md:grid-cols-4 gap-6"></div>
+            </div>
+        </section>
+    </div>
+
+    <!-- VISTA C: ARTÍCULO -->
+    <div id="vista-articulo" class="hidden flex-grow pt-32 pb-24 bg-white">
+        <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+            <button onclick="cambiarVista('origen')" class="text-gray-400 font-sans font-light hover:text-azul-corp mb-10 flex items-center transition duration-300">&larr; Volver</button>
+            <div class="mb-10 text-center">
+                <span id="art-categoria" class="text-xs font-sans font-semibold text-azul-corp tracking-[0.2em] uppercase"></span>
+                <h1 id="art-titulo" class="text-5xl md:text-6xl font-elegant text-gray-900 mt-6 mb-6 leading-tight"></h1>
+                <p id="art-fecha" class="text-gray-400 font-sans font-light text-sm uppercase tracking-wider"></p>
+            </div>
+            <div class="w-full h-64 md:h-[450px] bg-gray-100 rounded-xl overflow-hidden mb-16">
+                <img id="art-imagen" src="" alt="" class="w-full h-full object-cover">
+            </div>
+            <div id="art-contenido" class="prose max-w-none"></div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-16 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-8">
+            <div class="text-center md:text-left">
+                <div class="inline-block bg-white rounded-xl px-3 py-2 mb-4"><img src="vidanueva.png" alt="Vida Nueva Logo" class="h-10 w-auto block"></div>
+                <p id="txt-footer_texto" class="font-sans font-light text-sm text-gray-400 tracking-wide">Guadalajara, Jalisco.</p>
+            </div>
+            <div class="flex flex-col items-center md:items-end gap-4">
+                <a href="https://www.instagram.com/vidanueva_ap/" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white transition duration-300 flex items-center gap-2 font-sans font-light text-sm">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.041.058h.08c2.597 0 2.917-.01 3.96-.058.976-.045 1.505-.207 1.858-.344.466-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.048-1.055.058-1.37.058-4.041v-.08c0-2.597-.01-2.917-.058-3.96-.045-.976-.207-1.505-.344-1.858a3.097 3.097 0 00-.748-1.15 3.098 3.098 0 00-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4z" clip-rule="evenodd"/></svg>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        let datosCompletos = { blog: [], testimonios: [], equipo: [], alianzas: [], linea_tiempo: [] };
+        
+        const clavesTextos = [
+            'switch_origen', 'switch_onu', 'nav_btn_donar', 'hero_origen_tag', 'hero_origen_titulo', 
+            'historia_origen', 'btn_voluntario', 'btn_linea_tiempo', 'metrica_1_titulo', 'metrica_2_titulo', 'metrica_3_titulo',
+            'metrica_ediciones', 'metrica_voluntarios', 'metrica_familias', 'testimonio_titulo', 'testimonio_sub',
+            'blog_tag', 'blog_titulo', 'conector_titulo', 'conector_texto', 'conector_btn',
+            'onu_hero_tag', 'eslogan_onu', 'justificacion_onu', 'onu_btn_patrocinar', 'equipo_titulo', 
+            'equipo_sub', 'alianzas_titulo', 'alianzas_sub', 'footer_texto'
+        ];
+
+        function cambiarVista(vistaDestino) {
+            const btnOrigen = document.getElementById('btn-origen');
+            const btnOnu = document.getElementById('btn-onu');
+            const switchBg = document.getElementById('switch-bg');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            document.getElementById('vista-origen').classList.add('hidden');
+            document.getElementById('vista-onu').classList.add('hidden');
+            document.getElementById('vista-articulo').classList.add('hidden');
+
+            if(vistaDestino === 'origen') {
+                document.getElementById('vista-origen').classList.remove('hidden');
+                btnOrigen.classList.replace('inactive', 'active');
+                btnOnu.classList.replace('active', 'inactive');
+                switchBg.style.transform = 'translateX(0)';
+            } else if(vistaDestino === 'onu') {
+                document.getElementById('vista-onu').classList.remove('hidden');
+                btnOnu.classList.replace('inactive', 'active');
+                btnOrigen.classList.replace('active', 'inactive');
+                switchBg.style.transform = 'translateX(100%)';
+            } else {
+                document.getElementById('vista-articulo').classList.remove('hidden');
+            }
+        }
+
+        // CONTROL DE LA LÍNEA DE TIEMPO
+        function toggleTimeline() {
+            const wrapper = document.getElementById('timeline-wrapper');
+            const icon = document.getElementById('icon-timeline');
+            
+            if (wrapper.classList.contains('is-open')) {
+                wrapper.classList.remove('is-open');
+                icon.style.transform = 'rotate(0deg)';
+            } else {
+                wrapper.classList.add('is-open');
+                icon.style.transform = 'rotate(180deg)';
+            }
+        }
+
+        async function cargarDatos() {
+            const urlAPI = 'https://script.google.com/macros/s/AKfycbybA-xIIxuqgfKcItW5XSCptvYraYZoZcQ8H81zoEonMAjBpfbIViT7a_DmYRDtIHG6nQ/exec'; 
+
+            try {
+                const respuesta = await fetch(urlAPI);
+                datosCompletos = await respuesta.json();
+                datosCompletos.blog = (datosCompletos.blog || []).map(normalizarPost);
+                
+                if(datosCompletos.textos) {
+                    clavesTextos.forEach(clave => {
+                        const elemento = document.getElementById('txt-' + clave);
+                        if(elemento && datosCompletos.textos[clave]) {
+                            if(clave === 'btn_linea_tiempo') {
+                                elemento.innerHTML = 'La historia';
+                            } else {
+                                elemento.innerHTML = datosCompletos.textos[clave];
+                            }
+                        }
+                    });
+                }
+                
+                if(datosCompletos.imagenes) {
+                    if(datosCompletos.imagenes.foto_historia) document.getElementById('img-historia').src = datosCompletos.imagenes.foto_historia;
+                    if(datosCompletos.imagenes.foto_conector) document.getElementById('img-conector').src = datosCompletos.imagenes.foto_conector;
+                    if(datosCompletos.imagenes.foto_hero_onu) document.getElementById('bg-hero-onu').style.backgroundImage = `url('${datosCompletos.imagenes.foto_hero_onu}')`;
+                }
+                
+                renderizarTestimonios(datosCompletos.testimonios || []);
+                renderizarBlog(datosCompletos.blog || []);
+                renderizarEquipo(datosCompletos.equipo || []);
+                renderizarAlianzas(datosCompletos.alianzas || []);
+                renderizarTimeline(datosCompletos.linea_tiempo || []);
+            } catch (error) { console.error("Error:", error); }
+        }
+
+        function renderizarTimeline(datos) {
+            const cont = document.getElementById('timeline-content');
+            if(datos.length === 0) return;
+
+            cont.innerHTML = datos.map(item => `
+                <div class="relative group">
+                    <!-- Puntito azul alineado con la línea -->
+                    <div class="timeline-dot absolute left-[-33px] top-[-1px] w-4 h-4 rounded-full group-hover:scale-125 transition-transform duration-300 z-10"></div>
+                    
+                    <!-- Contenido -->
+                    <div>
+                        <span class="font-sans font-bold text-azul-corp text-[10px] tracking-widest uppercase mb-1 block">${item.fecha}</span>
+                        <h4 class="text-lg font-elegant text-gray-900 mb-1 leading-tight group-hover:text-azul-corp transition-colors duration-300">${item.titulo}</h4>
+                        <p class="text-sm font-light text-gray-500 leading-relaxed">${item.descripcion}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderizarTestimonios(datos) {
+            const cont = document.getElementById('testimonios-grid');
+            if(datos.length === 0) return;
+            cont.innerHTML = datos.map(t => `
+                <div class="card-hover bg-gray-50 rounded-2xl p-8 flex flex-col md:flex-row gap-6 items-center md:items-start text-left border border-gray-100">
+                    <img src="${t.foto_url}" alt="${t.nombre}" class="w-24 h-24 rounded-full object-cover shadow-md" onerror="this.src='https://via.placeholder.com/150'">
+                    <div>
+                        <h4 class="text-xl font-elegant text-gray-900 mb-2">${t.nombre}</h4>
+                        <p class="text-sm font-sans font-light text-gray-600 leading-relaxed italic">"${t.historia}"</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderizarEquipo(datos) {
+            const cont = document.getElementById('equipo-grid');
+            if(datos.length === 0) return;
+            cont.innerHTML = datos.map(p => `
+                <div class="flex flex-col items-center group">
+                    <div class="w-32 h-32 md:w-40 md:h-40 rounded-full overflow-hidden mb-4 shadow-lg border-4 border-white group-hover:border-azul-corp transition duration-300">
+                        <img src="${p.foto_url}" alt="${p.nombre}" class="w-full h-full object-cover" onerror="this.src='https://via.placeholder.com/200'">
+                    </div>
+                    <h4 class="text-lg font-elegant text-gray-900 leading-tight mb-1">${p.nombre}</h4>
+                    <span class="text-xs font-sans text-gray-400 tracking-wider uppercase">${p.puesto}</span>
+                </div>
+            `).join('');
+        }
+
+        // Normaliza los nombres de columnas del Sheet (mayúsculas, acentos, espacios)
+        function normalizarPost(post, i) {
+            const p = {};
+            Object.keys(post).forEach(k => {
+                const limpia = k.normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim().toLowerCase().replace(/\s+/g, '_');
+                p[limpia] = post[k];
+            });
+            if (i === 0) console.log('Columnas del blog recibidas:', Object.keys(post));
+            const v = (...claves) => { for (const c of claves) if (p[c] !== undefined && p[c] !== null && p[c] !== '') return p[c]; return ''; };
+            return {
+                id: v('id') || String(i),
+                titulo: v('titulo', 'title', 'nombre', 'encabezado'),
+                categoria: v('categoria', 'category', 'tag', 'etiqueta', 'tema'),
+                resumen: v('resumen', 'descripcion', 'extracto', 'summary', 'intro'),
+                fecha: v('fecha', 'date'),
+                imagen: v('imagen', 'foto', 'image', 'portada', 'url_imagen'),
+                contenido: v('contenido', 'texto', 'cuerpo', 'content', 'articulo')
+            };
+        }
+
+        function renderizarBlog(datos) {
+            const cont = document.getElementById('blog-grid');
+            if(datos.length === 0) return;
+            cont.innerHTML = datos.map(post => `
+                <article class="card-hover bg-white rounded-xl overflow-hidden flex flex-col group cursor-pointer border border-gray-100 shadow-sm" onclick="mostrarArticulo('${post.id}')">
+                    <div class="h-48 bg-gray-100 overflow-hidden relative">
+                        <div class="absolute top-4 left-4 bg-white/90 backdrop-blur text-azul-corp text-[9px] font-bold uppercase tracking-widest py-1.5 px-3 rounded-full z-10">${post.categoria}</div>
+                        <img src="${post.imagen}" alt="Post" class="w-full h-full object-cover transition duration-700 group-hover:scale-105" onerror="this.src='https://via.placeholder.com/400x200'">
+                    </div>
+                    <div class="p-6 flex-1 flex flex-col">
+                        <h3 class="text-xl font-elegant text-gray-900 mb-3 leading-snug group-hover:text-azul-corp transition">${post.titulo}</h3>
+                        <p class="text-gray-500 text-sm leading-relaxed mb-4 flex-1 font-light line-clamp-3">${post.resumen}</p>
+                        <div class="mt-auto pt-4 border-t border-gray-100 flex justify-between items-center">
+                            <span class="text-xs text-gray-400 font-sans font-light">${post.fecha}</span>
+                            <span class="text-azul-corp text-sm transition-transform duration-300 group-hover:translate-x-2">&rarr;</span>
+                        </div>
+                    </div>
+                </article>
+            `).join('');
+        }
+
+        function renderizarAlianzas(datos) {
+            const cont = document.getElementById('alianzas-grid');
+            cont.innerHTML = datos.map(alianza => {
+                const Tag = alianza.link ? 'a' : 'div';
+                const atributos = alianza.link ? `href="${alianza.link}" target="_blank"` : '';
+                return `
+                <${Tag} ${atributos} class="card-hover bg-gray-50 p-6 rounded-xl flex flex-col items-center text-center group ${alianza.link ? 'cursor-pointer' : 'cursor-default'}">
+                    <div class="h-16 flex items-center justify-center mb-4 w-full">
+                        <img src="${alianza.logo}" alt="${alianza.nombre}" class="respaldo-logo max-h-full max-w-full object-contain" onerror="this.src='https://via.placeholder.com/150x60'">
+                    </div>
+                    <h4 class="font-sans font-semibold text-gray-900 mb-2 group-hover:text-azul-corp transition text-sm">${alianza.nombre}</h4>
+                    <p class="text-[11px] text-gray-500 font-light leading-relaxed">${alianza.descripcion}</p>
+                </${Tag}>`;
+            }).join('');
+        }
+
+        function mostrarArticulo(id) {
+            const post = datosCompletos.blog.find(a => String(a.id) === String(id));
+            if(!post) return;
+            cambiarVista('articulo');
+            document.getElementById('art-categoria').innerText = post.categoria;
+            document.getElementById('art-titulo').innerText = post.titulo;
+            document.getElementById('art-fecha').innerText = post.fecha;
+            document.getElementById('art-imagen').src = post.imagen;
+            document.getElementById('art-contenido').innerHTML = marked.parse(String(post.contenido));
+        }
+
+        document.addEventListener('DOMContentLoaded', cargarDatos);
+    </script>
+</body>
+</html>
