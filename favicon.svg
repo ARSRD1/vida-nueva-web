@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- Logo de línea de Vida Nueva (corazón y dos manos que se toman), simplificado para leerse a 16 px. -->
+  <rect width="32" height="32" rx="7" fill="#FBF7EE"/>
+  <path d="M16 27.4 6.3 17.6C3 14.3 3.2 8.6 7.4 7 10.8 5.7 14.2 7.4 16 10.5 17.8 7.4 21.2 5.7 24.6 7 28.8 8.6 29 14.3 25.7 17.6Z" fill="none" stroke="#0450B2" stroke-width="2.4" stroke-linejoin="round"/>
+  <g fill="#0450B2" stroke="#FBF7EE" stroke-width="1.1" stroke-linejoin="round">
+    <!-- mano de arriba: sale de la derecha; la manga es un poco más alta que la mano -->
+    <path d="M12.4 11.7h8.2v4.4h-8.2a2.2 2.2 0 0 1 0-4.4z"/>
+    <rect x="20.6" y="11.1" width="9.2" height="5.6" rx="1"/>
+    <!-- mano de abajo: sale de la izquierda -->
+    <path d="M19.6 17.7h-8.2v4.4h8.2a2.2 2.2 0 0 0 0-4.4z"/>
+    <rect x="2.2" y="17.1" width="9.2" height="5.6" rx="1"/>
+  </g>
+</svg>
